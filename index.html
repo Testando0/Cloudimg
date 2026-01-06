@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8"><title>Z-Image Turbo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-zinc-950 text-white min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-xl w-full space-y-4">
+        <h1 class="text-2xl font-bold text-center">Z-Image Turbo 2026</h1>
+        <textarea id="p" placeholder="Prompt..." class="w-full p-4 bg-zinc-900 rounded-xl outline-none border border-zinc-800 focus:border-blue-500"></textarea>
+        <button onclick="g()" id="b" class="w-full py-4 bg-blue-600 rounded-xl font-bold">GERAR</button>
+        <div id="r" class="aspect-square bg-zinc-900 rounded-xl flex items-center justify-center overflow-hidden border border-zinc-800"></div>
+    </div>
+    <script>
+        async function g() {
+            const p = document.getElementById('p').value;
+            const b = document.getElementById('b');
+            const r = document.getElementById('r');
+            if(!p) return;
+            b.disabled = true; b.innerText = "GERANDO...";
+            try {
+                const res = await fetch('/api/generate', { method: 'POST', body: JSON.stringify({ prompt: p }) });
+                const blob = await res.blob();
+                r.innerHTML = `<img src="${URL.createObjectURL(blob)}" class="w-full h-full object-cover">`;
+            } catch (e) { alert("Erro!"); }
+            finally { b.disabled = false; b.innerText = "GERAR"; }
+        }
+    </script>
+</body>
+</html>
